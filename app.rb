@@ -1,6 +1,20 @@
 require "sinatra"
 require "sinatra/reloader"
 require "http"
+require "sinatra/cookies"
+
+get("/zebra") do
+  # cookies.store("color", "pink")
+  # cookies.store("sport", "tennis")
+  # or, similarly, we can use a more concise technique: []
+  cookies["color"] = "pink"
+  cookies["sport"] = "tennis"
+
+  # The cookies hash would now look like:
+  #    { "color" => "purple", "sport" => "tennis" }
+
+  "We stored two values, under the keys 'color' and 'sport'"
+end
 
 get("/") do
   "
@@ -28,6 +42,10 @@ post("/process_umbrella") do
 
   @latitude = @loc_hash.fetch("lat")
   @longitude = @loc_hash.fetch("lng")
+
+  cookies["last_location"] = @user_location
+  cookies["last_lat"] = @latitude
+  cookies["last_lng"] = @longitude
 
   erb(:umbrella_results)
 end
